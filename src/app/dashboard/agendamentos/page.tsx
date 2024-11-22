@@ -24,7 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { PhoneIcon as WhatsappIcon, Edit, Trash2 } from "lucide-react";
+import { PhoneIcon as WhatsappIcon, Edit, Trash2 } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -38,6 +38,7 @@ import {
   AgendamentoService,
 } from "@/app/api/services/appointmentServices";
 import Cookies from "js-cookie";
+import { ptBR } from 'date-fns/locale';
 
 type Agendamento = {
   id: any;
@@ -134,7 +135,9 @@ export default function Agendamentos() {
   }, [selectedDate, agendamentos, updateBookedTimeSlots]);
 
   const handleDateSelect = useCallback((date: Date | undefined) => {
-    setSelectedDate(date);
+    if (date && date >= new Date(new Date().setHours(0, 0, 0, 0))) {
+      setSelectedDate(date);
+    }
   }, []);
 
   const handleScheduleClick = useCallback(() => {
@@ -361,6 +364,10 @@ export default function Agendamentos() {
                 cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
                 day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
               }}
+              locale={ptBR}
+              disabled={(date) =>
+                date < new Date(new Date().setHours(0, 0, 0, 0))
+              }
             />
             <Button
               onClick={handleScheduleClick}
@@ -612,17 +619,16 @@ export default function Agendamentos() {
           )}
           <DialogFooter>
             <Button
-              variant="ghost"
+              variant="outline"
               onClick={() => {
                 setIsDetailsModalOpen(false);
                 setIsFormModalOpen(true);
               }}
             >
-              <Edit className="h-4 w-4" />
-              <span className="sr-only">Editar</span>
+              Editar
             </Button>
             <Button
-              variant="ghost"
+              variant="destructive"
               onClick={() => {
                 if (selectedAgendamento) {
                   handleDeleteHorario(
@@ -633,8 +639,7 @@ export default function Agendamentos() {
                 setIsDetailsModalOpen(false);
               }}
             >
-              <Trash2 className="h-4 w-4 text-red-500" />
-              <span className="sr-only">Deletar</span>
+              Deletar
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -642,3 +647,4 @@ export default function Agendamentos() {
     </div>
   );
 }
+
