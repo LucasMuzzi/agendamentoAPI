@@ -1,0 +1,129 @@
+<div className="flex items-center gap-2">
+                  <p>Qntd. de registros para exibir:</p>
+                  <Input
+                    size="md"
+                    placeholder="..."
+                    value={inputLimit}
+                    onChange={(e) => setInputLimit(Number(e.target.value))}
+                    style={{
+                      height: "31px",
+                      width: "8rem",
+                      lineHeight: "31px",
+                    }}
+                  />
+                </div>
+                <Select
+                  showSearch
+                  style={{ width: 230 }}
+                  placeholder="Escolha a opção para filtrar"
+                  optionFilterProp="label"
+                  onChange={(value: FilterType) => setFilterType(value)}
+                  options={[
+                    { value: "", label: "" },
+                    { value: "CNPJ EMITENTE", label: "CNPJ EMITENTE" },
+                    { value: "NUMERO", label: "NUMERO" },
+                  ]}
+                />
+                <Input
+                  size="md"
+                  placeholder="..."
+                  value={filterValue}
+                  onChange={(e) => setFilterValue(e.target.trim())}
+                  style={{
+                    height: "31px",
+                    width: "30rem",
+                    lineHeight: "31px",
+                  }}
+                />
+                <Button
+                  type="primary"
+                  icon={<FaSearch />}
+                  size={"middle"}
+                  style={{
+                    backgroundColor: "#FFBD59",
+                    color: "#242424",
+                    fontWeight: "bold",
+                  }}
+                  onClick={handleFilter} // Chama a função de filtragem
+                >
+                  Filtrar
+                </Button>
+              </div>
+              <Tooltip title={"Exportar arquivo XML"} placement="bottom">
+                <Button
+                  type="primary"
+                  icon={<DownloadIcon />}
+                  size={"middle"}
+                  style={{
+                    backgroundColor: "#FFBD59",
+                    color: "#242424",
+                    fontWeight: "bold",
+                  }}
+                  onClick={exportSelectedData}
+                >
+                  Exportar
+                </Button>
+              </Tooltip>
+            </Flex>
+          </CardBody>
+        </Card>
+        <Box marginTop={"2vh"} height={"auto"}>
+          <GenericTable
+            columns={columns}
+            data={filteredData} // Usa os dados filtrados
+            checkbox={true}
+            onCheckboxChange={onCheckboxChange}
+            checkboxAll={true}
+            activeButton={true}
+            labelButton={
+              displayItems
+                ? ["Download XML", "Buscar Itens", "Enviar E-mail"]
+                : ["Download XML", "Enviar E-mail"]
+            }
+            iconButton={
+              displayItems
+                ? [CloudDownloadOutlined, SearchOutlined, MailOutlined]
+                : [CloudDownloadOutlined, MailOutlined]
+            }
+            colorButton={
+              displayItems
+                ? ["#242424", "#242424", "#242424"]
+                : ["#242424", "#242424"]
+            }
+            onClickButton={
+              displayItems
+                ? [onClickDownloadXml, onClickSearchItens, onClickEmail]
+                : [onClickDownloadXml, onClickEmail]
+            }
+            sizeTable={"sm"}
+            isLoadingData={isLoadingData}
+          />
+        </Box>
+      </Box>
+      {!isLoadingData && (
+        <Box className="mt-6 h-[7vh] flex items-center p-2 gap-20">
+          <p>
+            <strong>Total de registros: </strong>
+            {dataCount}
+          </p>
+          <p>
+            <strong>Registros Exibidos: </strong>
+            {filteredData.length}
+          </p>
+        </Box>
+      )}
+      <ModalEmail
+        isOpen={isOpenModalEmail}
+        onClose={onCloseModalEmail}
+        dataEmail={dataEmail}
+      />
+      <ModalNfeItensXml
+        isOpen={isOpenModalItensXml}
+        onClose={onCloseModalItensXml}
+        dataItens={dataItensXml}
+      />
+    </>
+  );
+};
+
+export default GenericDataScreen;
