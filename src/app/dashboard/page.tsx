@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
@@ -37,7 +38,7 @@ type Agendamento = {
   tipoServico: string;
 };
 
-export default function DashboardHome() {
+export default function DashboardTable() {
   const [todayAppointments, setTodayAppointments] = useState<Agendamento[]>([]);
   const [isMobile, setIsMobile] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -73,14 +74,14 @@ export default function DashboardHome() {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const todayAgendamentos: Agendamento[] = agendamentosData
+        const todayAgendamentos: any[] = agendamentosData
           .filter((agendamento) => {
             const agendamentoDate = new Date(agendamento.data);
             agendamentoDate.setHours(0, 0, 0, 0);
             return agendamentoDate.getTime() === today.getTime();
           })
           .map((agendamento) => ({
-            id: agendamento.id,
+            id: agendamento._id,
             data: new Date(agendamento.data),
             horarios: agendamento.horarios,
             nome: agendamento.nome,
@@ -99,7 +100,7 @@ export default function DashboardHome() {
   }, []);
 
   const handleEditAgendamento = useCallback((agendamento: Agendamento) => {
- 
+    // Implement edit functionality
     console.log("Edit agendamento:", agendamento);
   }, []);
 
@@ -116,7 +117,6 @@ export default function DashboardHome() {
 
   return (
     <div className={`container mx-auto p-4 ${isMobile ? "ml-8" : ""}`}>
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
       <Card
         className={`flex-grow ${
           isMobile ? "w-[36vh]" : "w-full max-w-[1000px]"
@@ -133,8 +133,8 @@ export default function DashboardHome() {
                 <TableHead>Nome</TableHead>
                 {!isMobile && <TableHead>Contato</TableHead>}
                 {!isMobile && <TableHead>Serviço</TableHead>}
-                {!isMobile && <TableHead>WhatsApp</TableHead>}
-                <TableHead>Ações</TableHead>
+                <TableHead>WhatsApp</TableHead>
+                {!isMobile && <TableHead>Ações</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -160,51 +160,52 @@ export default function DashboardHome() {
                     {!isMobile && (
                       <TableCell>{agendamento.tipoServico}</TableCell>
                     )}
+
+                    <TableCell>
+                      {agendamento.isWhatsapp && (
+                        <a
+                          href={`https://wa.me/${agendamento.contato.replace(
+                            /\D/g,
+                            ""
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                        >
+                          <WhatsappIcon className="h-5 w-5 text-green-500" />
+                        </a>
+                      )}
+                    </TableCell>
                     {!isMobile && (
                       <TableCell>
-                        {agendamento.isWhatsapp && (
-                          <a
-                            href={`https://wa.me/${agendamento.contato.replace(
-                              /\D/g,
-                              ""
-                            )}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        <div className="flex space-x-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={(e) => {
                               e.stopPropagation();
+                              handleEditAgendamento(agendamento);
                             }}
                           >
-                            <WhatsappIcon className="h-5 w-5 text-green-500" />
-                          </a>
-                        )}
+                            <Edit className="h-4 w-4" />
+                            <span className="sr-only">Editar</span>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteAgendamento(agendamento.id);
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-500" />
+                            <span className="sr-only">Deletar</span>
+                          </Button>
+                        </div>
                       </TableCell>
                     )}
-                    <TableCell>
-                      <div className="flex space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEditAgendamento(agendamento);
-                          }}
-                        >
-                          <Edit className="h-4 w-4" />
-                          <span className="sr-only">Editar</span>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteAgendamento(agendamento.id);
-                          }}
-                        >
-                          <Trash2 className="h-4 w-4 text-red-500" />
-                          <span className="sr-only">Deletar</span>
-                        </Button>
-                      </div>
-                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
@@ -224,7 +225,7 @@ export default function DashboardHome() {
                 <p>{selectedAgendamento.data.toLocaleDateString("pt-BR")}</p>
               </div>
               <div>
-                <Label>Horários</Label>
+                <Label>Horário</Label>
                 <p>{selectedAgendamento.horarios.join(", ")}</p>
               </div>
               <div>

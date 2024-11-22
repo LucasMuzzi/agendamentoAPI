@@ -24,7 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { PhoneIcon as WhatsappIcon, Edit, Trash2 } from 'lucide-react';
+import { PhoneIcon as WhatsappIcon, Edit, Trash2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -38,7 +38,7 @@ import {
   AgendamentoService,
 } from "@/app/api/services/appointmentServices";
 import Cookies from "js-cookie";
-import { ptBR } from 'date-fns/locale';
+import { ptBR } from "date-fns/locale";
 
 type Agendamento = {
   id: any;
@@ -282,7 +282,7 @@ export default function Agendamentos() {
 
   const handleAgendamentoClick = useCallback((agendamento: Agendamento) => {
     setSelectedAgendamento(agendamento);
-    setIsDetailsModalOpen(true); // Abre o modal de informações em vez do modal de edição
+    setIsDetailsModalOpen(true);
   }, []);
 
   const handleDeleteHorario = useCallback(
@@ -393,8 +393,8 @@ export default function Agendamentos() {
                   <TableHead>Nome</TableHead>
                   {!isMobile && <TableHead>Contato</TableHead>}
                   {!isMobile && <TableHead>Serviço</TableHead>}
-                  {!isMobile && <TableHead>WhatsApp</TableHead>}
-                  <TableHead>Ações</TableHead>
+                  <TableHead>WhatsApp</TableHead>
+                  {!isMobile && <TableHead>Ações</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -429,55 +429,56 @@ export default function Agendamentos() {
                       {!isMobile && (
                         <TableCell>{agendamento.tipoServico}</TableCell>
                       )}
+
+                      <TableCell>
+                        {agendamento.isWhatsapp && (
+                          <a
+                            href={`https://wa.me/${agendamento.contato.replace(
+                              /\D/g,
+                              ""
+                            )}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                          >
+                            <WhatsappIcon className="h-5 w-5 text-green-500" />
+                          </a>
+                        )}
+                      </TableCell>
                       {!isMobile && (
                         <TableCell>
-                          {agendamento.isWhatsapp && (
-                            <a
-                              href={`https://wa.me/${agendamento.contato.replace(
-                                /\D/g,
-                                ""
-                              )}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                          <div className="flex space-x-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
                               onClick={(e) => {
                                 e.stopPropagation();
+                                setSelectedAgendamento(agendamento);
+                                setIsFormModalOpen(true);
                               }}
                             >
-                              <WhatsappIcon className="h-5 w-5 text-green-500" />
-                            </a>
-                          )}
+                              <Edit className="h-4 w-4" />
+                              <span className="sr-only">Editar</span>
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteHorario(
+                                  agendamento.id,
+                                  agendamento.horario
+                                );
+                              }}
+                            >
+                              <Trash2 className="h-4 w-4 text-red-500" />
+                              <span className="sr-only">Deletar</span>
+                            </Button>
+                          </div>
                         </TableCell>
                       )}
-                      <TableCell>
-                        <div className="flex space-x-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedAgendamento(agendamento);
-                              setIsFormModalOpen(true);
-                            }}
-                          >
-                            <Edit className="h-4 w-4" />
-                            <span className="sr-only">Editar</span>
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteHorario(
-                                agendamento.id,
-                                agendamento.horario
-                              );
-                            }}
-                          >
-                            <Trash2 className="h-4 w-4 text-red-500" />
-                            <span className="sr-only">Deletar</span>
-                          </Button>
-                        </div>
-                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>
@@ -596,7 +597,7 @@ export default function Agendamentos() {
                 </p>
               </div>
               <div>
-                <Label>Horários</Label>
+                <Label>Horário</Label>
                 <p>{selectedAgendamento.horarios.join(", ")}</p>
               </div>
               <div>
@@ -619,16 +620,17 @@ export default function Agendamentos() {
           )}
           <DialogFooter>
             <Button
-              variant="outline"
+              variant="ghost"
               onClick={() => {
                 setIsDetailsModalOpen(false);
                 setIsFormModalOpen(true);
               }}
             >
-              Editar
+              <Edit className="h-4 w-4" />
+              <span className="sr-only">Editar</span>
             </Button>
             <Button
-              variant="destructive"
+              variant="ghost"
               onClick={() => {
                 if (selectedAgendamento) {
                   handleDeleteHorario(
@@ -639,7 +641,8 @@ export default function Agendamentos() {
                 setIsDetailsModalOpen(false);
               }}
             >
-              Deletar
+              <Trash2 className="h-4 w-4 text-red-500" />
+              <span className="sr-only">Deletar</span>
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -647,4 +650,3 @@ export default function Agendamentos() {
     </div>
   );
 }
-
