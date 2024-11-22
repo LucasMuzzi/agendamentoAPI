@@ -98,7 +98,7 @@ export default function Agendamentos() {
         const agendamentosConvertidos: Agendamento[] = agendamentosData
           .filter((agendamento) => agendamento.userId === user.codUser)
           .map((agendamento) => ({
-            id: agendamento._id, // Use _id aqui
+            id: agendamento._id,
             data: new Date(agendamento.data),
             horarios: agendamento.horarios,
             nome: agendamento.nome,
@@ -166,11 +166,10 @@ export default function Agendamentos() {
 
       const user = JSON.parse(userCookie);
 
-      // Criar um array de novos agendamentos
       const novosAgendamentos = selectedTimes.map((time) => ({
         userId: user.codUser,
         data: selectedDate.toISOString(),
-        horarios: [time], // Salve o horário individualmente
+        horarios: [time],
         nome,
         contato,
         isWhatsapp,
@@ -178,17 +177,14 @@ export default function Agendamentos() {
       }));
 
       try {
-        // Envie cada agendamento individualmente
         const agendamentosCriados = await Promise.all(
           novosAgendamentos.map((agendamento: any) =>
             agendamentoService.criarAgendamento(agendamento)
           )
         );
 
-        // Atualize o estado com todos os novos agendamentos
         setAgendamentos((prev: any) => [...prev, ...agendamentosCriados]);
 
-        // Feche o modal e limpe os campos
         setIsFormModalOpen(false);
         setSelectedTimes([]);
         setNome("");
@@ -226,12 +222,11 @@ export default function Agendamentos() {
 
       const user = JSON.parse(userCookie);
 
-      // Atualizar o agendamento para cada horário selecionado
       const updatedAgendamentos = selectedTimes.map((time) => ({
-        id: selectedAgendamento.id, // ID do agendamento a ser atualizado
+        id: selectedAgendamento.id,
         userId: user.codUser,
         data: selectedDate.toISOString(),
-        horarios: [time], // O novo horário
+        horarios: [time],
         nome,
         contato,
         isWhatsapp,
@@ -245,7 +240,6 @@ export default function Agendamentos() {
           )
         );
 
-        // Atualiza o estado local para refletir a edição
         setAgendamentos((prev) =>
           prev.map((a) =>
             a.id === selectedAgendamento.id
@@ -254,7 +248,6 @@ export default function Agendamentos() {
           )
         );
 
-        // Feche o modal e limpe os campos
         setIsFormModalOpen(false);
         setSelectedTimes([]);
         setNome("");
@@ -278,15 +271,15 @@ export default function Agendamentos() {
 
   const handleFormSubmit = useCallback(() => {
     if (selectedAgendamento) {
-      handleEditAgendamento(); // Se um agendamento estiver selecionado, edita
+      handleEditAgendamento();
     } else {
-      handleCreateAgendamento(); // Caso contrário, cria um novo
+      handleCreateAgendamento();
     }
   }, [selectedAgendamento, handleEditAgendamento, handleCreateAgendamento]);
 
   const handleAgendamentoClick = useCallback((agendamento: Agendamento) => {
     setSelectedAgendamento(agendamento);
-    setIsFormModalOpen(true); // Abra o modal de edição aqui
+    setIsDetailsModalOpen(true); // Abre o modal de informações em vez do modal de edição
   }, []);
 
   const handleDeleteHorario = useCallback(
@@ -325,7 +318,7 @@ export default function Agendamentos() {
       setIsWhatsapp(selectedAgendamento.isWhatsapp);
       setTipoServico(selectedAgendamento.tipoServico);
       setSelectedTimes(selectedAgendamento.horarios);
-      setSelectedDate(new Date(selectedAgendamento.data)); // Defina a data
+      setSelectedDate(new Date(selectedAgendamento.data));
     }
   }, [selectedAgendamento]);
 
@@ -454,9 +447,9 @@ export default function Agendamentos() {
                             variant="ghost"
                             size="icon"
                             onClick={(e) => {
-                              e.stopPropagation(); // Impede que o clique na linha da tabela seja registrado
-                              setSelectedAgendamento(agendamento); // Define o agendamento selecionado
-                              setIsFormModalOpen(true); // Abre o modal de edição
+                              e.stopPropagation();
+                              setSelectedAgendamento(agendamento);
+                              setIsFormModalOpen(true);
                             }}
                           >
                             <Edit className="h-4 w-4" />
@@ -466,11 +459,11 @@ export default function Agendamentos() {
                             variant="ghost"
                             size="icon"
                             onClick={(e) => {
-                              e.stopPropagation(); // Impede que o clique na linha da tabela seja registrado
+                              e.stopPropagation();
                               handleDeleteHorario(
                                 agendamento.id,
                                 agendamento.horario
-                              ); // Chama a função para deletar apenas o horário
+                              );
                             }}
                           >
                             <Trash2 className="h-4 w-4 text-red-500" />
@@ -620,21 +613,24 @@ export default function Agendamentos() {
           <DialogFooter>
             <Button
               variant="ghost"
-              size="icon"
-              onClick={() => handleEditAgendamento()}
+              onClick={() => {
+                setIsDetailsModalOpen(false);
+                setIsFormModalOpen(true);
+              }}
             >
               <Edit className="h-4 w-4" />
               <span className="sr-only">Editar</span>
             </Button>
             <Button
               variant="ghost"
-              size="icon"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDeleteHorario(
-                  selectedAgendamento!.id,
-                  selectedAgendamento!.data
-                );
+              onClick={() => {
+                if (selectedAgendamento) {
+                  handleDeleteHorario(
+                    selectedAgendamento.id,
+                    selectedAgendamento.horarios[0]
+                  );
+                }
+                setIsDetailsModalOpen(false);
               }}
             >
               <Trash2 className="h-4 w-4 text-red-500" />
