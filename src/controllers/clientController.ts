@@ -8,7 +8,7 @@ export const registerClient = async (
   const { name, phone, codUser, whatsapp } = req.body;
 
   try {
-    if (!name || !phone || !codUser) {
+    if (!name || !phone || !codUser || !whatsapp) {
       return res
         .status(400)
         .json({ message: "Todos os campos são obrigatórios." });
@@ -26,15 +26,20 @@ export const registerClient = async (
   }
 };
 
-export const getClientsByCodUser  = async (req: Request, res: Response): Promise<any> => {
-  const { codUser  } = req.body;
+export const getClientsByCodUser = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  const { codUser } = req.body;
 
   try {
-    if (!codUser ) {
-      return res.status(400).json({ message: "O campo codUser  é obrigatório." });
+    if (!codUser) {
+      return res
+        .status(400)
+        .json({ message: "O campo codUser  é obrigatório." });
     }
 
-    const clients = await Client.find({ codUser  }).exec();
+    const clients = await Client.find({ codUser }).exec();
     res.status(200).json({ clients });
   } catch (error) {
     console.error("Erro ao buscar clientes:", error);
