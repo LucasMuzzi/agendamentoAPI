@@ -20,7 +20,15 @@ connectToDatabase();
 
 app.use("/api", userRoute);
 app.use("/api", appointmentRoute);
-app.use("/api", registerRoute)
+app.use("/api", registerRoute);
+
+// Manter API ativa
+app.get("/api/health", (req, res) => {
+  res.status(200).json({
+    message: "API is running!",
+    timestamp: new Date().toISOString(),
+  });
+});
 
 app.use(errorMiddleware);
 
