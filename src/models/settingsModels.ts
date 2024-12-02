@@ -5,6 +5,6 @@ const serviceTypeSchema = new Schema({
   codUser: { type: String, required: true },
 });
 
-const ServiceType = model("ServiceType", serviceTypeSchema);
+const ServiceType = model("Settings", serviceTypeSchema);
 
 export default ServiceType;

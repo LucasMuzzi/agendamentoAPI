@@ -22,7 +22,7 @@ const agendamentoSchema = new Schema<IAgendamento>({
 });
 
 const Agendamento = mongoose.model<IAgendamento>(
-  "Agendamento",
+  "Appointment",
   agendamentoSchema
 );
 

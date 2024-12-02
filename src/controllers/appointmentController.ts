@@ -7,12 +7,11 @@ export const criarAgendamento = async (req: Request, res: Response) => {
     req.body;
 
   try {
-    // Criar um novo agendamento para cada horário
     const novosAgendamentos = horarios.map((horario: string) => {
       return new Agendamento({
         userId,
         data,
-        horarios: horario, // Salve o horário individualmente
+        horarios: horario,
         nome,
         contato,
         isWhatsapp,
@@ -20,12 +19,11 @@ export const criarAgendamento = async (req: Request, res: Response) => {
       });
     });
 
-    // Salvar todos os agendamentos no banco de dados
     const agendamentosSalvos = await Promise.all(
       novosAgendamentos.map((agendamento: any) => agendamento.save())
     );
 
-    res.status(201).json(agendamentosSalvos); // Retornar todos os agendamentos salvos
+    res.status(201).json(agendamentosSalvos);
   } catch (error) {
     console.error("Erro ao salvar agendamento:", error);
     res.status(500).json({ message: "Erro ao salvar agendamento", error });
