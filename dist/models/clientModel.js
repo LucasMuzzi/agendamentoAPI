@@ -23,16 +23,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// models/agendamentoModel.ts
 const mongoose_1 = __importStar(require("mongoose"));
-const agendamentoSchema = new mongoose_1.Schema({
-    userId: { type: String, required: true },
-    data: { type: Date, required: true },
-    horarios: { type: [String], required: true },
-    nome: { type: String, required: true },
-    contato: { type: String, required: true },
-    isWhatsapp: { type: Boolean, required: true }, // Adicione esta linha
-    tipoServico: { type: String, required: true },
-});
-const Agendamento = mongoose_1.default.model("Appointment", agendamentoSchema);
-exports.default = Agendamento;
+const ClientSchema = new mongoose_1.Schema({
+    name: { type: String, required: true },
+    phone: { type: String, required: true },
+    codUser: { type: String, required: true },
+    whatsapp: { type: Boolean, default: false },
+}, { timestamps: true });
+exports.default = mongoose_1.default.model("Client", ClientSchema);

@@ -17,21 +17,19 @@ const appointmentModel_1 = __importDefault(require("../models/appointmentModel")
 const criarAgendamento = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, data, horarios, nome, contato, isWhatsapp, tipoServico } = req.body;
     try {
-        // Criar um novo agendamento para cada horário
         const novosAgendamentos = horarios.map((horario) => {
             return new appointmentModel_1.default({
                 userId,
                 data,
-                horarios: horario, // Salve o horário individualmente
+                horarios: horario,
                 nome,
                 contato,
                 isWhatsapp,
                 tipoServico,
             });
         });
-        // Salvar todos os agendamentos no banco de dados
         const agendamentosSalvos = yield Promise.all(novosAgendamentos.map((agendamento) => agendamento.save()));
-        res.status(201).json(agendamentosSalvos); // Retornar todos os agendamentos salvos
+        res.status(201).json(agendamentosSalvos);
     }
     catch (error) {
         console.error("Erro ao salvar agendamento:", error);
