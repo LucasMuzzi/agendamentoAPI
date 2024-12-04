@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import ServiceType from "../models/serviceTypesModels";
 import Schedule from "../models/scheduleModels";
+import Upload from "../models/uploadsModel";
+import fs from "fs"; // Para manipulação de arquivos
+import path from "path"; // Para manipulação de caminhos
 
 // Função para gerar os horários
 const generateSchedule = (
@@ -158,6 +161,61 @@ export const getSchedule = async (
 
     // Retornar os horários encontrados
     res.status(200).json(schedule);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const uploadImage = async (
+  req: Request & { file?: Express.Multer.File },
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    // Verifica se um arquivo foi enviado
+    if (!req.file) {
+      res.status(400).json({ message: "Nenhum arquivo enviado." });
+      return;
+    }
+
+    const { codUser } = req.body;
+
+    // Verifica se já existe um upload para o codUser
+    const existingUpload = await Upload.findOne({ codUser });
+
+    if (existingUpload) {
+      // Se já existe, remove a imagem antiga
+      const oldImagePath = path.join(
+        __dirname,
+        "../uploads",
+        existingUpload.logotipo
+      ); // Ajuste o caminho conforme necessário
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlinkSync(oldImagePath); // Remove a imagem antiga
+      }
+
+      // Atualiza o registro existente
+      existingUpload.logotipo = req.file.filename; // Atualiza o logotipo
+      await existingUpload.save(); // Salva as alterações
+
+      res.status(200).json({
+        message: "Imagem atualizada com sucesso!",
+        logotipo: existingUpload.logotipo,
+      });
+    } else {
+      // Se não existe, cria um novo registro
+      const newUpload = new Upload({
+        codUser,
+        logotipo: req.file.filename,
+      });
+
+      await newUpload.save();
+
+      res.status(201).json({
+        message: "Imagem enviada e salva com sucesso!",
+        logotipo: req.file.filename,
+      });
+    }
   } catch (error) {
     next(error);
   }
