@@ -78,8 +78,6 @@ export const createSchedule = async (
   try {
     const { horarioInicio, horarioFim, intervalo, codUser } = req.body;
 
-    console.log(req.body);
-
     // Validações
     if (!horarioInicio || !horarioFim || !intervalo || !codUser) {
       res.status(400).json({
