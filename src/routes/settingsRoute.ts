@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createSchedule,
   createServiceType,
+  getImage,
   getSchedule,
   getServiceTypes,
   uploadImage,
@@ -15,5 +16,6 @@ router.post("/get-service", getServiceTypes);
 router.post("/create-schedule", createSchedule);
 router.post("/get-schedule", getSchedule);
 router.post("/upload-image", upload.single("logotipo"), uploadImage);
+router.post("/get-image", getImage);
 
 export default router;

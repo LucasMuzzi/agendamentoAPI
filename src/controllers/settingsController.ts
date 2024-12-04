@@ -78,7 +78,6 @@ export const createSchedule = async (
   try {
     const { horarioInicio, horarioFim, intervalo, codUser } = req.body;
 
-    // Validações
     if (!horarioInicio || !horarioFim || !intervalo || !codUser) {
       res.status(400).json({
         message:
@@ -214,6 +213,45 @@ export const uploadImage = async (
         logotipo: req.file.filename,
       });
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Função para buscar a imagem
+export const getImage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { codUser } = req.body;
+
+    if (!codUser) {
+      res.status(400).json({ message: "O codUser  é obrigatório." });
+      return;
+    }
+
+    // Buscar o registro de upload correspondente ao codUser
+    const upload = await Upload.findOne({ codUser });
+
+    if (!upload) {
+      res
+        .status(404)
+        .json({ message: "Nenhuma imagem encontrada para este codUser ." });
+      return;
+    }
+
+    // Construir a URL completa da imagem
+    const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
+      upload.logotipo
+    }`;
+
+    // Retornar a URL da imagem
+    res.status(200).json({
+      message: "Imagem encontrada com sucesso.",
+      logotipo: imageUrl, // Retorna a URL completa da imagem
+    });
   } catch (error) {
     next(error);
   }

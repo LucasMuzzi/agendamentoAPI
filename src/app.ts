@@ -7,6 +7,7 @@ import errorMiddleware from "./middleware/errorMiddleware";
 import appointmentRoute from "./routes/appointmentRoute";
 import registerRoute from "./routes/clientRoute";
 import settingsRoute from "./routes/settingsRoute";
+import path from "path";
 
 dotenv.config();
 
@@ -22,7 +23,9 @@ connectToDatabase();
 app.use("/api", userRoute);
 app.use("/api", appointmentRoute);
 app.use("/api", registerRoute);
-app.use('/api', settingsRoute)
+app.use("/api", settingsRoute);
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Manter API ativa
 app.get("/api/health", (req, res) => {
