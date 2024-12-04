@@ -20,8 +20,6 @@
 # production
 /build
 
-# uploads
-/uploads/  # Ignora a pasta de uploads
 
 # misc
 .DS_Store
