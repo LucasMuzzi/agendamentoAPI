@@ -169,7 +169,6 @@ export const uploadImage = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    // Verifica se um arquivo foi enviado
     if (!req.file) {
       res.status(400).json({ message: "Nenhum arquivo enviado." });
       return;
@@ -177,30 +176,26 @@ export const uploadImage = async (
 
     const { codUser } = req.body;
 
-    // Verifica se já existe um upload para o codUser
     const existingUpload = await Upload.findOne({ codUser });
 
     if (existingUpload) {
-      // Se já existe, remove a imagem antiga
       const oldImagePath = path.join(
         __dirname,
         "../uploads",
         existingUpload.logotipo
-      ); // Ajuste o caminho conforme necessário
+      );
       if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath); // Remove a imagem antiga
+        fs.unlinkSync(oldImagePath);
       }
 
-      // Atualiza o registro existente
-      existingUpload.logotipo = req.file.filename; // Atualiza o logotipo
-      await existingUpload.save(); // Salva as alterações
+      existingUpload.logotipo = req.file.filename;
+      await existingUpload.save();
 
       res.status(200).json({
         message: "Imagem atualizada com sucesso!",
         logotipo: existingUpload.logotipo,
       });
     } else {
-      // Se não existe, cria um novo registro
       const newUpload = new Upload({
         codUser,
         logotipo: req.file.filename,
@@ -232,7 +227,6 @@ export const getImage = async (
       return;
     }
 
-    // Buscar o registro de upload correspondente ao codUser
     const upload = await Upload.findOne({ codUser });
 
     if (!upload) {
@@ -242,15 +236,52 @@ export const getImage = async (
       return;
     }
 
-    // Construir a URL completa da imagem
     const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
       upload.logotipo
     }`;
 
-    // Retornar a URL da imagem
     res.status(200).json({
       message: "Imagem encontrada com sucesso.",
-      logotipo: imageUrl, // Retorna a URL completa da imagem
+      logotipo: imageUrl,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Função para remover o tipo de serviço
+export const removeServiceType = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id, codUser } = req.body;
+
+
+    if (!id || !codUser) {
+      res.status(400).json({
+        message: "O ID do serviço e o codUser  são obrigatórios.",
+      });
+      return;
+    }
+
+    const deletedServiceType = await ServiceType.findOneAndDelete({
+      _id: id,
+      codUser,
+    });
+
+    if (!deletedServiceType) {
+      res.status(404).json({
+        message:
+          "Tipo de serviço não encontrado ou você não tem permissão para removê-lo.",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Tipo de serviço removido com sucesso.",
+      deletedServiceType,
     });
   } catch (error) {
     next(error);

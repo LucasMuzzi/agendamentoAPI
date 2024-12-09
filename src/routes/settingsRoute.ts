@@ -5,6 +5,7 @@ import {
   getImage,
   getSchedule,
   getServiceTypes,
+  removeServiceType,
   uploadImage,
 } from "../controllers/settingsController";
 import { upload } from "../middleware/multerMiddleware";
@@ -17,5 +18,6 @@ router.post("/create-schedule", createSchedule);
 router.post("/get-schedule", getSchedule);
 router.post("/upload-image", upload.single("logotipo"), uploadImage);
 router.post("/get-image", getImage);
+router.delete("/remove-service", removeServiceType);
 
 export default router;
