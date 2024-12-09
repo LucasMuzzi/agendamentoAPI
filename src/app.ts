@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import cors from "cors"; // Importe o CORS
+import cors from "cors";
 import connectToDatabase from "./config/mongodatabase";
 import userRoute from "./routes/userRoute";
 import errorMiddleware from "./middleware/errorMiddleware";
