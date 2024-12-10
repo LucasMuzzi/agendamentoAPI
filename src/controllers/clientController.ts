@@ -7,13 +7,13 @@ export const registerClient = async (
 ): Promise<any> => {
   const { name, phone, codUser, whatsapp } = req.body;
 
+ 
   try {
-    if (!name || !phone || !codUser || !whatsapp) {
+    if (!name || !phone || !codUser  || whatsapp === undefined) {
       return res
         .status(400)
         .json({ message: "Todos os campos são obrigatórios." });
     }
-
     const newClient = new Client({ name, phone, codUser, whatsapp });
     await newClient.save();
 
@@ -75,12 +75,10 @@ export const updateClient = async (
       { new: true } // Retorna o cliente atualizado
     );
 
-    res
-      .status(200)
-      .json({
-        message: "Cliente atualizado com sucesso!",
-        client: updatedClient,
-      });
+    res.status(200).json({
+      message: "Cliente atualizado com sucesso!",
+      client: updatedClient,
+    });
   } catch (error) {
     console.error("Erro ao atualizar cliente:", error);
     res.status(500).json({ message: "Erro ao atualizar cliente", error });
@@ -91,8 +89,8 @@ export const deleteClient = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  const { id } = req.params; 
-  const { codUser } = req.body; 
+  const { id } = req.params;
+  const { codUser } = req.body;
 
   try {
     // Verifique se o cliente existe

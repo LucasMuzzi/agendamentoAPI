@@ -12,7 +12,7 @@ const ClientSchema: Schema = new Schema(
     name: { type: String, required: true },
     phone: { type: String, required: true },
     codUser: { type: String, required: true },
-    whatsapp: { type: Boolean, default: false },
+    whatsapp: { type: Boolean, required: true },
   },
   { timestamps: true }
 );

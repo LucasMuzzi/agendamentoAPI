@@ -100,13 +100,11 @@ export const createSchedule = async (
       intervalNumber
     );
 
-    // Verificar se já existe um documento com o codUser
     const existingSchedule = await Schedule.findOne({ codUser });
 
     if (existingSchedule) {
-      // Se existir, atualizar os horários
-      existingSchedule.horarios = schedule; // Substituir os horários
-      await existingSchedule.save(); // Salvar as alterações
+      existingSchedule.horarios = schedule;
+      await existingSchedule.save();
       res.status(200).json({
         message: "Horários atualizados com sucesso.",
         schedule,
@@ -114,12 +112,11 @@ export const createSchedule = async (
       });
       return;
     } else {
-      // Se não existir, criar um novo documento
       const newSchedule = new Schedule({
         codUser,
         horarios: schedule,
       });
-      await newSchedule.save(); // Salvar o novo documento
+      await newSchedule.save();
       res.status(201).json({
         message: "Novo horário criado com sucesso.",
         schedule,
@@ -249,7 +246,6 @@ export const getImage = async (
   }
 };
 
-// Função para remover o tipo de serviço
 export const removeServiceType = async (
   req: Request,
   res: Response,
@@ -257,7 +253,6 @@ export const removeServiceType = async (
 ): Promise<void> => {
   try {
     const { id, codUser } = req.body;
-
 
     if (!id || !codUser) {
       res.status(400).json({
