@@ -1,18 +1,14 @@
 import { Router } from "express";
-import {
-  createUser,
-  loginUser,
-  requestPasswordReset,
-  verifyResetCode,
-  logoutUser,
-} from "../controllers/userController";
+import { UserController } from "../controllers/userController";
 
 const router = Router();
+const userController = new UserController();
 
-router.post("/register", createUser);
-router.post("/login", loginUser);
-router.post("/request-password-reset", requestPasswordReset);
-router.post("/verify-reset-code", verifyResetCode);
-router.post("/logout", logoutUser ); 
+// Definindo as rotas
+router.post("/register", userController.createUser);
+router.post("/login", userController.loginUser);
+router.post("/request-password-reset", userController.requestPasswordReset);
+router.post("/verify-reset-code", userController.verifyResetCode);
+router.post("/logout", userController.logoutUser);
 
 export default router;
