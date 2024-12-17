@@ -4,7 +4,6 @@ import { UserController } from "../controllers/userController";
 const router = Router();
 const userController = new UserController();
 
-// Definindo as rotas
 router.post("/register", userController.createUser);
 router.post("/login", userController.loginUser);
 router.post("/request-password-reset", userController.requestPasswordReset);

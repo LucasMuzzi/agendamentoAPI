@@ -36,7 +36,7 @@ export class ClientService {
     const updatedClient = await Client.findByIdAndUpdate(
       id,
       { name, phone, whatsapp },
-      { new: true } // Retorna o cliente atualizado
+      { new: true }
     );
 
     return updatedClient;

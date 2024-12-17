@@ -25,12 +25,10 @@ export class ClientController {
         codUser,
         whatsapp
       );
-      res
-        .status(201)
-        .json({
-          message: "Cliente cadastrado com sucesso!",
-          client: newClient,
-        });
+      res.status(201).json({
+        message: "Cliente cadastrado com sucesso!",
+        client: newClient,
+      });
     } catch (error) {
       console.error("Erro ao cadastrar cliente:", error);
       res.status(500).json({ message: "Erro ao cadastrar cliente", error });
@@ -59,7 +57,7 @@ export class ClientController {
   };
 
   public updateClient = async (req: Request, res: Response): Promise<any> => {
-    const { id } = req.params; // ID do cliente a ser atualizado
+    const { id } = req.params;
     const { codUser, name, phone, whatsapp } = req.body;
 
     try {

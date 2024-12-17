@@ -1,4 +1,3 @@
-// routes/registerRoute.ts
 import { Router } from "express";
 import { ClientController } from "../controllers/clientController";
 

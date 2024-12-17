@@ -1,4 +1,3 @@
-// routes/agendamentoRoutes.ts
 import { Router } from "express";
 import { AppointmentController } from "../controllers/appointmentController";
 
