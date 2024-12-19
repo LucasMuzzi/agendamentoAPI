@@ -28,6 +28,6 @@ const ClientSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     phone: { type: String, required: true },
     codUser: { type: String, required: true },
-    whatsapp: { type: Boolean, default: false },
+    whatsapp: { type: Boolean, required: true },
 }, { timestamps: true });
 exports.default = mongoose_1.default.model("Client", ClientSchema);
