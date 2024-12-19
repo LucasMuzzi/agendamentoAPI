@@ -30,6 +30,20 @@ export class UserController {
     }
   };
 
+  public getUsers = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const users = await this.userService.getUser();
+
+      res.status(200).json({ users });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public loginUser = async (
     req: Request,
     res: Response,

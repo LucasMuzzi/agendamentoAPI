@@ -20,6 +20,11 @@ export class UserService {
     return newUser;
   }
 
+  async getUser() {
+    const users = await User.find();
+    return users;
+  }
+
   async loginUser(email: string, password: string) {
     const user = await User.findOne({ email });
     if (!user) {
