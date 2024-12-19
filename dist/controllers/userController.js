@@ -30,6 +30,15 @@ class UserController {
                 next(error);
             }
         });
+        this.getUsers = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const users = yield this.userService.getUser();
+                res.status(200).json({ users });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
         this.loginUser = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, password } = req.body;

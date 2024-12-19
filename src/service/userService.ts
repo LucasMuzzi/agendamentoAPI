@@ -22,6 +22,7 @@ export class UserService {
 
   async getUser() {
     const users = await User.find();
+    
     return users;
   }
 

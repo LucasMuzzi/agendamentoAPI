@@ -28,6 +28,12 @@ class UserService {
             return newUser;
         });
     }
+    getUser() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const users = yield userModel_1.default.find();
+            return users;
+        });
+    }
     loginUser(email, password) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield userModel_1.default.findOne({ email });
