@@ -15,9 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SettingsService = void 0;
 const serviceTypesModels_1 = __importDefault(require("../models/serviceTypesModels"));
 const scheduleModels_1 = __importDefault(require("../models/scheduleModels"));
-const uploadsModel_1 = __importDefault(require("../models/uploadsModel"));
-const fs_1 = __importDefault(require("fs"));
-const path_1 = __importDefault(require("path"));
 class SettingsService {
     createServiceType(nome, codUser) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -55,40 +52,6 @@ class SettingsService {
                 throw new Error("Nenhum horário encontrado para este codUser .");
             }
             return schedule;
-        });
-    }
-    uploadImage(codUser, file) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const existingUpload = yield uploadsModel_1.default.findOne({ codUser });
-            if (existingUpload) {
-                const oldImagePath = path_1.default.join(__dirname, "../uploads", existingUpload.logotipo);
-                if (fs_1.default.existsSync(oldImagePath)) {
-                    fs_1.default.unlinkSync(oldImagePath);
-                }
-                existingUpload.logotipo = file.filename;
-                yield existingUpload.save();
-                return {
-                    message: "Imagem atualizada com sucesso!",
-                    logotipo: existingUpload.logotipo,
-                };
-            }
-            else {
-                const newUpload = new uploadsModel_1.default({ codUser, logotipo: file.filename });
-                yield newUpload.save();
-                return {
-                    message: "Imagem enviada e salva com sucesso!",
-                    logotipo: file.filename,
-                };
-            }
-        });
-    }
-    getImage(codUser) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const upload = yield uploadsModel_1.default.findOne({ codUser });
-            if (!upload) {
-                throw new Error("Nenhuma imagem encontrada para este codUser .");
-            }
-            return upload;
         });
     }
     removeServiceType(id, codUser) {

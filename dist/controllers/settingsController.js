@@ -17,9 +17,7 @@ class SettingsController {
             try {
                 const { nome, codUser } = req.body;
                 if (!nome || !codUser) {
-                    res
-                        .status(400)
-                        .json({
+                    res.status(400).json({
                         message: "O nome do serviço e o codUser  são obrigatórios.",
                     });
                     return;
@@ -77,38 +75,6 @@ class SettingsController {
                 }
                 const schedule = yield this.settingsService.getSchedule(codUser);
                 res.status(200).json(schedule);
-            }
-            catch (error) {
-                next(error);
-            }
-        });
-        this.uploadImage = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                if (!req.file) {
-                    res.status(400).json({ message: "Nenhum arquivo enviado." });
-                    return;
-                }
-                const { codUser } = req.body;
-                const { message, logotipo } = yield this.settingsService.uploadImage(codUser, req.file);
-                res.status(200).json({ message, logotipo });
-            }
-            catch (error) {
-                next(error);
-            }
-        });
-        this.getImage = (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { codUser } = req.body;
-                if (!codUser) {
-                    res.status(400).json({ message: "O codUser  é obrigatório." });
-                    return;
-                }
-                const upload = yield this.settingsService.getImage(codUser);
-                const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${upload.logotipo}`;
-                res.status(200).json({
-                    message: "Imagem encontrada com sucesso.",
-                    logotipo: imageUrl,
-                });
             }
             catch (error) {
                 next(error);

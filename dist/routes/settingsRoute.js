@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const multerMiddleware_1 = require("../middleware/multerMiddleware");
 const settingsController_1 = require("../controllers/settingsController");
 const router = (0, express_1.Router)();
 const settingsController = new settingsController_1.SettingsController();
@@ -9,7 +8,5 @@ router.post("/create-service", settingsController.createServiceType);
 router.post("/get-service", settingsController.getServiceTypes);
 router.post("/create-schedule", settingsController.createSchedule);
 router.post("/get-schedule", settingsController.getSchedule);
-router.post("/upload-image", multerMiddleware_1.upload.single("logotipo"), settingsController.uploadImage);
-router.post("/get-image", settingsController.getImage);
 router.delete("/remove-service", settingsController.removeServiceType);
 exports.default = router;

@@ -1,6 +1,6 @@
 import ServiceType from "../models/serviceTypesModels";
 import Schedule from "../models/scheduleModels";
-import Upload from "../models/uploadsModel";
+
 import fs from "fs";
 import path from "path";
 
@@ -46,43 +46,6 @@ export class SettingsService {
       throw new Error("Nenhum horário encontrado para este codUser .");
     }
     return schedule;
-  }
-
-  async uploadImage(codUser: string, file: Express.Multer.File) {
-    const existingUpload = await Upload.findOne({ codUser });
-
-    if (existingUpload) {
-      const oldImagePath = path.join(
-        __dirname,
-        "../uploads",
-        existingUpload.logotipo
-      );
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath);
-      }
-
-      existingUpload.logotipo = file.filename;
-      await existingUpload.save();
-      return {
-        message: "Imagem atualizada com sucesso!",
-        logotipo: existingUpload.logotipo,
-      };
-    } else {
-      const newUpload = new Upload({ codUser, logotipo: file.filename });
-      await newUpload.save();
-      return {
-        message: "Imagem enviada e salva com sucesso!",
-        logotipo: file.filename,
-      };
-    }
-  }
-
-  async getImage(codUser: string) {
-    const upload = await Upload.findOne({ codUser });
-    if (!upload) {
-      throw new Error("Nenhuma imagem encontrada para este codUser .");
-    }
-    return upload;
   }
 
   async removeServiceType(id: string, codUser: string) {

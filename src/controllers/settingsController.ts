@@ -18,11 +18,9 @@ export class SettingsController {
       const { nome, codUser } = req.body;
 
       if (!nome || !codUser) {
-        res
-          .status(400)
-          .json({
-            message: "O nome do serviço e o codUser  são obrigatórios.",
-          });
+        res.status(400).json({
+          message: "O nome do serviço e o codUser  são obrigatórios.",
+        });
         return;
       }
 
@@ -108,56 +106,6 @@ export class SettingsController {
 
       const schedule = await this.settingsService.getSchedule(codUser);
       res.status(200).json(schedule);
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  public uploadImage = async (
-    req: Request & { file?: Express.Multer.File },
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
-    try {
-      if (!req.file) {
-        res.status(400).json({ message: "Nenhum arquivo enviado." });
-        return;
-      }
-
-      const { codUser } = req.body;
-
-      const { message, logotipo } = await this.settingsService.uploadImage(
-        codUser,
-        req.file
-      );
-      res.status(200).json({ message, logotipo });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  public getImage = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
-    try {
-      const { codUser } = req.body;
-
-      if (!codUser) {
-        res.status(400).json({ message: "O codUser  é obrigatório." });
-        return;
-      }
-
-      const upload = await this.settingsService.getImage(codUser);
-      const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${
-        upload.logotipo
-      }`;
-
-      res.status(200).json({
-        message: "Imagem encontrada com sucesso.",
-        logotipo: imageUrl,
-      });
     } catch (error) {
       next(error);
     }
