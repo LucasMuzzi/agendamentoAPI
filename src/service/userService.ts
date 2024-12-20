@@ -22,9 +22,36 @@ export class UserService {
 
   async getUser() {
     const users = await User.find();
-    
+
     return users;
   }
+
+  async editUserByCodUser(
+    codUser: string,
+    data: { name?: string; email?: string; password?: string }
+  ) {
+    const user = await User.findOne({ codUser });
+    if (!user) {
+      throw new Error("Usuário não encontrado");
+    }
+
+    if (data.name) user.name = data.name;
+    if (data.email) user.email = data.email;
+    if (data.password) user.password = data.password;
+
+    await user.save();
+    return user;
+  }
+
+  async deleteUserByCodUser(codUser: string) {
+    const user = await User.findOneAndDelete({ codUser });
+    if (!user) {
+      throw new Error("Usuário não encontrado");
+    }
+    return user;
+  }
+
+
 
   async loginUser(email: string, password: string) {
     const user = await User.findOne({ email });

@@ -44,6 +44,48 @@ export class UserController {
     }
   };
 
+  public editUserByCodUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const { codUser, name, email, password } = req.body;
+
+      const updateData: { name?: string; email?: string; password?: string } =
+        {};
+      if (name) updateData.name = name;
+      if (email) updateData.email = email;
+      if (password) updateData.password = password;
+
+      const updatedUser = await this.userService.editUserByCodUser(
+        codUser,
+        updateData
+      );
+      res
+        .status(200)
+        .json({ message: "Usuário atualizado com sucesso", user: updatedUser });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteUserByCodUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const { codUser } = req.body;
+      const deletedUser = await this.userService.deleteUserByCodUser(codUser);
+      res
+        .status(200)
+        .json({ message: "Usuário deletado com sucesso", user: deletedUser });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public loginUser = async (
     req: Request,
     res: Response,
